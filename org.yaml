@@ -7,18 +7,7 @@ metadata:
 spec:
   memberOf: [guests]
 ---
-# Usuario de GitHub - jCharlieDisrupting
-apiVersion: backstage.io/v1alpha1
-kind: User
-metadata:
-  name: jCharlieDisrupting
-spec:
-  profile:
-    displayName: Juan
-    email: carlos.orta@trend-it.com.mx
-  memberOf: [developers]
----
-# Usuario de GitHub - jCharlieTrendIt
+# Usuario de GitHub - REEMPLAZA 'jCharlieTrendIt' con tu nombre de usuario de GitHub
 apiVersion: backstage.io/v1alpha1
 kind: User
 metadata:
