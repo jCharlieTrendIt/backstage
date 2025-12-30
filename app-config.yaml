@@ -12,6 +12,11 @@ backend:
   # auth:
   #   keys:
   #     - secret: ${BACKEND_SECRET}
+  reading:
+    allow:
+      - host: raw.githubusercontent.com
+      - host: github.com
+      - host: '*.github.com'
   baseUrl: http://localhost:7007
   listen:
     port: 7007
@@ -70,8 +75,8 @@ auth:
     guest: {}
     github:
       development:
-        clientId: Ov23liL4TwbdpqSp4PTh
-        clientSecret: 784d84e0ad9d489e9482aace01d251659d38e172
+        clientId: ${GITHUB_CLIENT_ID}
+        clientSecret: ${GITHUB_CLIENT_SECRET}
         signIn:
           resolvers:
             - resolver: usernameMatchingUserEntityName
@@ -102,7 +107,8 @@ catalog:
       rules:
         - allow: [User, Group]
     - type: url
-      target: https://github.com/jCharlieTrendIt/my-backstage/blob/main/catalog-info.yaml
+      # target: https://github.com/jCharlieTrendIt/my-backstage/blob/main/catalog-info.yaml
+      target: https://github.com/jCharlieTrendIt/confluence/blob/main/catalog-info.yml
 
 kubernetes:
   # see https://backstage.io/docs/features/kubernetes/configuration for kubernetes configuration options

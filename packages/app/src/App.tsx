@@ -29,6 +29,9 @@ import {
   AlertDisplay,
   OAuthRequestDialog,
   SignInPage,
+  Page,
+  Header,
+  Content,
 } from '@backstage/core-components';
 import { createApp } from '@backstage/app-defaults';
 import { AppRouter, FlatRoutes } from '@backstage/core-app-api';
@@ -39,6 +42,7 @@ import { NotificationsPage } from '@backstage/plugin-notifications';
 import { SignalsDisplay } from '@backstage/plugin-signals';
 
 import { githubAuthApiRef } from '@backstage/core-plugin-api';
+import { Confluence } from './pages/Confluence';
 
 const app = createApp({
   apis,
@@ -113,6 +117,21 @@ const routes = (
     <Route path="/settings" element={<UserSettingsPage />} />
     <Route path="/catalog-graph" element={<CatalogGraphPage />} />
     <Route path="/notifications" element={<NotificationsPage />} />
+    //Confluence Test
+    <Route
+      path="/confluence-test"
+      element={
+        <Page themeId="tool">
+          <Header
+            title="Confluence API Test"
+            subtitle="Espacio de validación para trend-it-team-gmnh5g7v"
+          />
+          <Content>
+            <Confluence />
+          </Content>
+        </Page>
+      }
+    />
   </FlatRoutes>
 );
 
