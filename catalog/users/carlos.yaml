@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: carlos
+spec:
+  profile:
+    displayName: Juan Carlos Orta
+    email: carlos.orta@trend-it.com.mx
+  memberOf: []

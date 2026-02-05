@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: jCharlieTrendIt
+spec:
+  profile:
+    displayName: Juan Carlos Orta (GitHub)
+    email: jcharlie@trend-it.com.mx
+  memberOf: []

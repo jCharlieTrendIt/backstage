@@ -31,6 +31,9 @@ backend.add(import('@backstage/plugin-auth-backend-module-guest-provider'));
 backend.add(import('@backstage/plugin-auth-backend-module-github-provider'));
 // See https://backstage.io/docs/auth/github/provider
 
+// Atlassian Auth plugin
+backend.add(import('@backstage/plugin-auth-backend-module-atlassian-provider'));
+
 // catalog plugin
 backend.add(import('@backstage/plugin-catalog-backend'));
 backend.add(

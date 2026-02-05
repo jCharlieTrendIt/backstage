@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import ExtensionIcon from '@material-ui/icons/Extension';
 import LibraryBooks from '@material-ui/icons/LibraryBooks';
-import DescriptionIcon from '@material-ui/icons/Description';
 import CreateComponentIcon from '@material-ui/icons/AddCircleOutline';
 import LogoFull from './LogoFull';
 import LogoIcon from './LogoIcon';
@@ -29,19 +28,37 @@ import SearchIcon from '@material-ui/icons/Search';
 import { MyGroupsSidebarItem } from '@backstage/plugin-org';
 import GroupIcon from '@material-ui/icons/People';
 import { NotificationsSidebarItem } from '@backstage/plugin-notifications';
+import { AtlassianSidebarItem } from '../AtlassianSidebarItem';
+import { Loader } from '../Loader/Loader';
 
 const useSidebarLogoStyles = makeStyles({
   root: {
-    width: sidebarConfig.drawerWidthClosed,
+    width: '100%',
     height: 3 * sidebarConfig.logoHeight,
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: -14,
+    padding: '16px 8px',
   },
   link: {
-    width: sidebarConfig.drawerWidthClosed,
-    marginLeft: 24,
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logo: {
+    width: 'auto',
+    height: 48,
+    maxWidth: '52px',
+    objectFit: 'contain',
+  },
+  logoOpen: {
+    width: 'auto',
+    height: 70,
+    maxWidth: '180px',
+    objectFit: 'contain',
   },
 });
 
@@ -52,7 +69,11 @@ const SidebarLogo = () => {
   return (
     <div className={classes.root}>
       <Link to="/" underline="none" className={classes.link} aria-label="Home">
-        {isOpen ? <LogoFull /> : <LogoIcon />}
+        <img
+          src="/liverpool.png"
+          alt="Liverpool Logo"
+          className={isOpen ? classes.logoOpen : classes.logo}
+        />
       </Link>
     </div>
   );
@@ -60,6 +81,7 @@ const SidebarLogo = () => {
 
 export const Root = ({ children }: PropsWithChildren<{}>) => (
   <SidebarPage>
+    <Loader />
     <Sidebar>
       <SidebarLogo />
       <SidebarGroup label="Search" icon={<SearchIcon />} to="/search">
@@ -78,11 +100,8 @@ export const Root = ({ children }: PropsWithChildren<{}>) => (
         <SidebarItem icon={LibraryBooks} to="docs" text="Docs" />
         <SidebarItem icon={CreateComponentIcon} to="create" text="Create..." />
 
-        <SidebarItem
-          icon={DescriptionIcon}
-          to="confluence-test"
-          text="Confluence Test"
-        />
+        {/* ES AQUI DONDE SE AGREGA EL COMPONENTE */}
+        <AtlassianSidebarItem />
         {/* End global nav */}
         <SidebarDivider />
         <SidebarScrollWrapper>

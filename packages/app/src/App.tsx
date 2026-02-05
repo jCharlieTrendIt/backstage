@@ -41,11 +41,37 @@ import { catalogEntityCreatePermission } from '@backstage/plugin-catalog-common/
 import { NotificationsPage } from '@backstage/plugin-notifications';
 import { SignalsDisplay } from '@backstage/plugin-signals';
 
-import { githubAuthApiRef } from '@backstage/core-plugin-api';
-import { Confluence } from './pages/Confluence';
+import {
+  githubAuthApiRef,
+  atlassianAuthApiRef,
+} from '@backstage/core-plugin-api';
+import { Jira } from './pages/Jira';
+import { ConfluencePage } from './pages/ConfluencePage';
+import { LoaderProvider } from './components/Loader/LoaderProvider';
+import { DocumentationPage } from './pages/DocumentationPage';
+import { UnifiedThemeProvider } from '@backstage/theme';
+import { customDarkTheme, customLightTheme } from './config/theme';
 
 const app = createApp({
   apis,
+  themes: [
+    {
+      id: 'light',
+      title: 'Tema Claro',
+      variant: 'light',
+      Provider: ({ children }) => (
+        <UnifiedThemeProvider theme={customLightTheme} children={children} />
+      ),
+    },
+    {
+      id: 'dark',
+      title: 'Tema Oscuro',
+      variant: 'dark',
+      Provider: ({ children }) => (
+        <UnifiedThemeProvider theme={customDarkTheme} children={children} />
+      ),
+    },
+  ],
   bindRoutes({ bind }) {
     bind(catalogPlugin.externalRoutes, {
       createComponent: scaffolderPlugin.routes.root,
@@ -67,7 +93,7 @@ const app = createApp({
     SignInPage: props => (
       <SignInPage
         {...props}
-        auto
+        // auto
         providers={[
           'guest',
           {
@@ -75,6 +101,12 @@ const app = createApp({
             title: 'GitHub',
             message: 'Sign in using GitHub',
             apiRef: githubAuthApiRef,
+          },
+          {
+            id: 'atlassian',
+            title: 'Atlassian',
+            message: 'Sign in with Atlassian',
+            apiRef: atlassianAuthApiRef,
           },
         ]}
       />
@@ -117,17 +149,45 @@ const routes = (
     <Route path="/settings" element={<UserSettingsPage />} />
     <Route path="/catalog-graph" element={<CatalogGraphPage />} />
     <Route path="/notifications" element={<NotificationsPage />} />
-    //Confluence Test
-    <Route
-      path="/confluence-test"
+    {/* Atlassian Pages */}
+    {/* <Route
+      path="/jira"
       element={
         <Page themeId="tool">
           <Header
-            title="Confluence API Test"
-            subtitle="Espacio de validación para trend-it-team-gmnh5g7v"
+            title="Jira"
+            subtitle="Gestión de proyectos y seguimiento de issues"
           />
           <Content>
-            <Confluence />
+            <Jira />
+          </Content>
+        </Page>
+      }
+    />
+    <Route
+      path="/confluence"
+      element={
+        <Page themeId="tool">
+          <Header
+            title="Confluence"
+            subtitle="Documentación y colaboración en equipo"
+          />
+          <Content>
+            <ConfluencePage />
+          </Content>
+        </Page>
+      }
+    /> */}
+    <Route
+      path="/documentation"
+      element={
+        <Page themeId="tool">
+          <Header
+            title="Documentation"
+            subtitle="Documentación y colaboración en equipo"
+          />
+          <Content>
+            <DocumentationPage />
           </Content>
         </Page>
       }
@@ -140,8 +200,11 @@ export default app.createRoot(
     <AlertDisplay />
     <OAuthRequestDialog />
     <SignalsDisplay />
+
     <AppRouter>
-      <Root>{routes}</Root>
+      <LoaderProvider>
+        <Root>{routes}</Root>
+      </LoaderProvider>
     </AppRouter>
   </>,
 );

@@ -1,9 +1,12 @@
 app:
   title: Scaffolded Backstage App
   baseUrl: http://localhost:3000
+  branding:
+    theme:
+      default: light
 
 organization:
-  name: My Company
+  name: Liverpool
 
 backend:
   # Used for enabling authentication, secret is shared by all backend plugins
@@ -56,6 +59,55 @@ proxy:
   #     target: 'https://example.com'
   #     changeOrigin: true
 
+  endpoints:
+    '/atlassian-resources':
+      target: 'https://api.atlassian.com'
+      changeOrigin: true
+      allowedMethods: ['GET']
+      credentials: dangerously-allow-unauthenticated
+      allowedHeaders: ['Authorization']
+      pathRewrite:
+        '^/api/proxy/atlassian-resources/?': '/oauth/token/accessible-resources'
+      headers:
+        Accept: 'application/json'
+
+    '/confluence-api':
+      target: 'https://api.atlassian.com/ex/confluence'
+      changeOrigin: true
+      allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
+      credentials: dangerously-allow-unauthenticated
+      allowedHeaders: ['Authorization']
+      headers:
+        Accept: 'application/json'
+
+    '/confluence-site':
+      target: 'https://trend-it-team-xt9xlqsr.atlassian.net'
+      changeOrigin: true
+      allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
+      credentials: dangerously-allow-unauthenticated
+      allowedHeaders: ['Authorization']
+      headers:
+        Accept: 'application/json'
+
+    # Endpoint alternativo usando Basic Auth (más estable que OAuth para Confluence)
+    '/confluence-basic':
+      target: 'https://trend-it-team-xt9xlqsr.atlassian.net/wiki'
+      changeOrigin: true
+      allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
+      credentials: dangerously-allow-unauthenticated
+      allowedHeaders: ['Authorization']
+      headers:
+        Accept: 'application/json'
+
+    '/jira-api':
+      target: 'https://api.atlassian.com/ex/jira'
+      changeOrigin: true
+      allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
+      credentials: dangerously-allow-unauthenticated
+      allowedHeaders: ['Authorization']
+      headers:
+        Accept: 'application/json'
+
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
 # and an external cloud storage when deploying TechDocs for production use-case.
@@ -69,8 +121,28 @@ techdocs:
 
 auth:
   # see https://backstage.io/docs/auth/ to learn about auth providers
-  environment: development
   providers:
+    atlassian:
+      development:
+        clientId: ${ATLASSIAN_CLIENT_ID}
+        clientSecret: ${ATLASSIAN_CLIENT_SECRET}
+        callbackUrl: http://localhost:7007/api/auth/atlassian/handler/frame
+        additionalScopes:
+          - write:confluence-props
+          - read:confluence-content.all
+          - read:confluence-content.summary
+          - read:confluence-user
+          - read:jira-user
+          - read:jira-work
+        # scope:
+        #   - read:me
+        signIn:
+          resolvers:
+            # Intenta primero con el email
+            - resolver: emailMatchingUserEntityProfileEmail
+            # Si falla, intenta con el nombre de usuario
+            - resolver: emailLocalPartMatchingUserEntityName
+
     # See https://backstage.io/docs/auth/guest/provider
     guest: {}
     github:
@@ -102,13 +174,17 @@ catalog:
         - allow: [Template]
 
     # Local example organizational data
+    # - type: file
+    #   target: ../../examples/org.yaml
+    #   rules:
+    #     - allow: [User, Group]
     - type: file
-      target: ../../examples/org.yaml
+      target: ../../catalog/users/*.yaml
       rules:
-        - allow: [User, Group]
+        - allow: [User]
     - type: url
-      # target: https://github.com/jCharlieTrendIt/my-backstage/blob/main/catalog-info.yaml
-      target: https://github.com/jCharlieTrendIt/confluence/blob/main/catalog-info.yml
+      target: https://github.com/jCharlieTrendIt/my-backstage/blob/main/catalog-info.yaml
+      # target: https://github.com/jCharlieTrendIt/confluence/blob/main/catalog-info.yml
 
 kubernetes:
   # see https://backstage.io/docs/features/kubernetes/configuration for kubernetes configuration options
